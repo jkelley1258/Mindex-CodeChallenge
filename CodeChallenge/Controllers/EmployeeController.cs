@@ -10,7 +10,7 @@ using CodeChallenge.Models;
 namespace CodeChallenge.Controllers
 {
     [ApiController]
-    [Route("api/employee")]
+    [Route("api/[controller]/[action]")]
     public class EmployeeController : ControllerBase
     {
         private readonly ILogger _logger;

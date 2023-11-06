@@ -1,0 +1,14 @@
+﻿[
+	{
+		"compensationId": "a8f52eb2-e441-40ea-a114-b6720eb50162",
+		"employeeId": "16a596ae-edd3-4847-99fe-c4518e82c86f",
+		"salary": 50000,
+		"effectiveDate": "2023-01-01T12:00:00"
+	},
+	{
+		"compensationId": "b4893e09-59b4-4079-bc61-83f98c234760",
+		"employeeId": "b7839309-3348-463b-a7e3-5de1c168beb3",
+		"salary": 30000,
+		"effectiveDate": "2023-01-01T12:00:00"
+	}
+]

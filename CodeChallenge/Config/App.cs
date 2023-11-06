@@ -20,18 +20,23 @@ namespace CodeChallenge.Config
             var builder = WebApplication.CreateBuilder(args);
 
             builder.UseEmployeeDB();
-            
+
             AddServices(builder.Services);
-
             var app = builder.Build();
-
+            
             var env = builder.Environment;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 SeedEmployeeDB();
-            }
 
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                    options.RoutePrefix = string.Empty;
+                });
+            }
             app.UseAuthorization();
 
             app.MapControllers();
@@ -44,8 +49,14 @@ namespace CodeChallenge.Config
 
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<IEmployeeRepository, EmployeeRespository>();
+            services.AddScoped<IReportingStructureService, ReportingStructureService>();
+            services.AddScoped<ICompensationService, CompensationService>();
+            services.AddScoped<ICompensationRepository, CompensationRepository>();
 
             services.AddControllers();
+
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
         }
 
         private void SeedEmployeeDB()

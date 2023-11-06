@@ -12,6 +12,7 @@ namespace CodeChallenge.Data
     {
         private EmployeeContext _employeeContext;
         private const String EMPLOYEE_SEED_DATA_FILE = "resources/EmployeeSeedData.json";
+        private const String COMPENSATION_SEED_DATA_FILE = "resources/CompensationSeedData.json";
 
         public EmployeeDataSeeder(EmployeeContext employeeContext)
         {
@@ -20,13 +21,18 @@ namespace CodeChallenge.Data
 
         public async Task Seed()
         {
-            if(!_employeeContext.Employees.Any())
+            if (!_employeeContext.Employees.Any())
             {
                 List<Employee> employees = LoadEmployees();
-                _employeeContext.Employees.AddRange(employees);
-
-                await _employeeContext.SaveChangesAsync();
+                _employeeContext.AddRange(employees);
             }
+
+            if(!_employeeContext.Compensations.Any())
+            {
+                List<Compensation> compensations = LoadCompensations();
+                _employeeContext.AddRange(compensations);
+            }
+            await _employeeContext.SaveChangesAsync();
         }
 
         private List<Employee> LoadEmployees()
@@ -44,14 +50,28 @@ namespace CodeChallenge.Data
             }
         }
 
+        private List<Compensation> LoadCompensations()
+        {
+            using (FileStream fs = new FileStream(COMPENSATION_SEED_DATA_FILE, FileMode.Open))
+            using (StreamReader sr = new StreamReader(fs))
+            using (JsonReader jr = new JsonTextReader(sr))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+
+                List<Compensation> compensations = serializer.Deserialize<List<Compensation>>(jr);
+
+                return compensations;
+            }
+        }
+
         private void FixUpReferences(List<Employee> employees)
         {
             var employeeIdRefMap = from employee in employees
-                                select new { Id = employee.EmployeeId, EmployeeRef = employee };
+                                   select new { Id = employee.EmployeeId, EmployeeRef = employee };
 
             employees.ForEach(employee =>
             {
-                
+
                 if (employee.DirectReports != null)
                 {
                     var referencedEmployees = new List<Employee>(employee.DirectReports.Count);
